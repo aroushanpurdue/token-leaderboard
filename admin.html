@@ -178,9 +178,9 @@
 
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: #e5e7eb;
-            border-radius: 3px;
+            border-radius: 4px;
             overflow: hidden;
             margin-top: 12px;
             display: none;
@@ -220,9 +220,9 @@
             <div class="content">
                 <div class="info-box">
                     <strong>📋 How It Works:</strong>
-                    • <strong>Update Leaderboard:</strong> Fetches latest balances, compares with last snapshot, shows hourly gains<br>
+                    • <strong>Update Leaderboard:</strong> Runs in background (no timeout!), fetches all 124K+ holders<br>
                     • <strong>Reset Baseline:</strong> Resets all scores to 0 (sets current as new baseline)<br>
-                    • Updates take ~15 minutes for 124K holders
+                    • Updates run in background - you can close this page while it runs
                 </div>
 
                 <div class="button-group">
@@ -252,7 +252,7 @@
     </div>
 
     <script>
-        let updateInterval;
+        let pollInterval = null;
 
         async function updateLeaderboard() {
             const btn = document.getElementById('updateBtn');
@@ -261,23 +261,16 @@
             const progressBar = document.getElementById('progressBar');
             const progressFill = document.getElementById('progressFill');
             
-            // Disable button
             btn.disabled = true;
-            btnText.innerHTML = '<span class="spinner"></span> Updating...';
+            btnText.innerHTML = '<span class="spinner"></span> Starting...';
             
-            // Show status
             status.className = 'status info show';
-            status.innerHTML = `
-                ⏳ <strong>Update Started</strong><br>
-                Step 1/2: Fetching latest holder data from API...<br>
-                <em>This will take approximately 15 minutes. Please wait...</em>
-            `;
-
-            // Show progress bar
+            status.innerHTML = '⏳ Starting background update...';
             progressBar.classList.add('show');
-            progressFill.style.width = '30%';
+            progressFill.style.width = '5%';
 
             try {
+                // Start background update
                 const response = await fetch('/api/update', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
@@ -285,40 +278,80 @@
                 
                 const result = await response.json();
 
-                progressFill.style.width = '100%';
-
-                if (result.success) {
-                    status.className = 'status success show';
-                    status.innerHTML = `
-                        ✅ <strong>Update Complete!</strong><br><br>
-                        📊 <strong>Results:</strong><br>
-                        • Total Holders: ${result.totalHolders?.toLocaleString() || 'N/A'}<br>
-                        • Gainers Found: ${result.gainers || 0}<br>
-                        • Top Gain: ${result.topGain || '0'} tokens<br>
-                        • Duration: ${result.duration || 'N/A'}<br><br>
-                        🎉 Leaderboard updated successfully!
-                    `;
-                } else {
-                    throw new Error(result.error || 'Update failed');
+                if (!result.success) {
+                    throw new Error(result.message);
                 }
+
+                status.innerHTML = '🔄 <strong>Update running in background...</strong><br>Monitoring progress... (This takes ~15 minutes)';
+                progressFill.style.width = '10%';
+
+                // Poll for status every 5 seconds
+                if (pollInterval) clearInterval(pollInterval);
+                
+                pollInterval = setInterval(async () => {
+                    try {
+                        const statusRes = await fetch('/api/update-status');
+                        const statusData = await statusRes.json();
+
+                        if (statusData.running) {
+                            // Update progress
+                            const progress = Math.min(90, (statusData.progress / 124607) * 100);
+                            progressFill.style.width = progress + '%';
+                            
+                            const elapsed = statusData.startTime 
+                                ? Math.floor((new Date() - new Date(statusData.startTime)) / 1000)
+                                : 0;
+                            
+                            status.innerHTML = `
+                                🔄 <strong>Update in progress...</strong><br>
+                                📊 Fetched: ${statusData.progress.toLocaleString()} / 124,607 holders<br>
+                                ⏱️ Elapsed: ${Math.floor(elapsed / 60)}m ${elapsed % 60}s
+                            `;
+                        } else if (statusData.lastCompleted) {
+                            // Update complete
+                            clearInterval(pollInterval);
+                            pollInterval = null;
+                            progressFill.style.width = '100%';
+                            
+                            if (statusData.error) {
+                                throw new Error(statusData.error);
+                            }
+                            
+                            status.className = 'status success show';
+                            status.innerHTML = `
+                                ✅ <strong>Update Complete!</strong><br><br>
+                                📊 <strong>Results:</strong><br>
+                                • Total Holders: ${statusData.totalHolders.toLocaleString()}<br>
+                                • Gainers Found: ${statusData.gainers}<br>
+                                • Top Gain: ${statusData.topGain || '0'} tokens<br>
+                                • Completed: ${new Date(statusData.lastCompleted).toLocaleTimeString()}<br><br>
+                                🎉 Leaderboard updated successfully!
+                            `;
+                            
+                            btn.disabled = false;
+                            btnText.textContent = 'Update Leaderboard';
+                            
+                            setTimeout(() => {
+                                progressBar.classList.remove('show');
+                                progressFill.style.width = '0%';
+                            }, 3000);
+                        }
+                    } catch (pollError) {
+                        console.error('Poll error:', pollError);
+                    }
+                }, 5000); // Check every 5 seconds
+
             } catch (error) {
-                progressFill.style.width = '100%';
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                }
+                
                 status.className = 'status error show';
-                status.innerHTML = `
-                    ❌ <strong>Update Failed</strong><br><br>
-                    <strong>Error:</strong> ${error.message}<br><br>
-                    Please try again or check server logs.
-                `;
-            } finally {
-                // Re-enable button
+                status.innerHTML = `❌ <strong>Error:</strong> ${error.message}`;
                 btn.disabled = false;
                 btnText.textContent = 'Update Leaderboard';
-                
-                // Hide progress bar after 2 seconds
-                setTimeout(() => {
-                    progressBar.classList.remove('show');
-                    progressFill.style.width = '0%';
-                }, 2000);
+                progressBar.classList.remove('show');
             }
         }
 
@@ -376,6 +409,21 @@
                 btn.innerHTML = '<span>⚠️</span><span>Reset Baseline (All Scores → 0)</span>';
             }
         }
+
+        // Auto-check status on page load (in case update is already running)
+        window.addEventListener('load', async () => {
+            try {
+                const statusRes = await fetch('/api/update-status');
+                const statusData = await statusRes.json();
+                
+                if (statusData.running) {
+                    // Resume monitoring
+                    updateLeaderboard();
+                }
+            } catch (error) {
+                console.log('Status check skipped');
+            }
+        });
     </script>
 </body>
 </html>
