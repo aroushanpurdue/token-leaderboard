@@ -1,0 +1,41 @@
+{
+  "name": "token-holder-leaderboard-tracker",
+  "version": "2.0.0",
+  "description": "Token holder leaderboard tracking system for 100K+ holders on Somnia mainnet with hourly gain tracking",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "fetch": "node fetch-from-api.js",
+    "calculate": "node calculate-hourly.js",
+    "update": "node fetch-from-api.js && node calculate-hourly.js",
+    "reset": "node -e \"const fs=require('fs'); fs.copyFileSync('holders_data.json', 'baseline_1hr.json'); console.log('✅ Baseline reset!');\""
+  },
+  "keywords": [
+    "ethereum",
+    "token",
+    "holders",
+    "leaderboard",
+    "tracking",
+    "somnia",
+    "web3",
+    "express",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2",
+    "express": "^4.22.1",
+    "p-limit": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

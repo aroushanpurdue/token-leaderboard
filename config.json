@@ -1,0 +1,6 @@
+{
+  "resetIntervalHours": 24,
+  "lastResetTime": null,
+  "nextResetTime": null,
+  "adminPassword": "admin123"
+}

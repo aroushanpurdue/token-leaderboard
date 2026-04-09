@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Token Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .info-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            padding: 18px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-update {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-update:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-reset:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .status {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.8;
+            display: none;
+            border: 2px solid #e5e7eb;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .status.info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .progress-bar.show {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 24px; }
+            .content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>🔧 Admin Control Panel</h1>
+                <div class="subtitle">Token Holder Leaderboard Management</div>
+            </div>
+
+            <div class="content">
+                <div class="info-box">
+                    <strong>📋 How It Works:</strong>
+                    • <strong>Update Leaderboard:</strong> Fetches latest balances, compares with last snapshot, shows hourly gains<br>
+                    • <strong>Reset Baseline:</strong> Resets all scores to 0 (sets current as new baseline)<br>
+                    • Updates take ~15 minutes for 124K holders
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-update" id="updateBtn" onclick="updateLeaderboard()">
+                        <span>🔄</span>
+                        <span id="updateBtnText">Update Leaderboard</span>
+                    </button>
+
+                    <button class="btn-reset" id="resetBtn" onclick="resetBaseline()">
+                        <span>⚠️</span>
+                        <span>Reset Baseline (All Scores → 0)</span>
+                    </button>
+
+                    <button class="btn-view" onclick="window.open('LB.html', '_blank')">
+                        <span>👁️</span>
+                        <span>View Public Leaderboard</span>
+                    </button>
+                </div>
+
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="status" class="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let updateInterval;
+
+        async function updateLeaderboard() {
+            const btn = document.getElementById('updateBtn');
+            const btnText = document.getElementById('updateBtnText');
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            
+            // Disable button
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> Updating...';
+            
+            // Show status
+            status.className = 'status info show';
+            status.innerHTML = `
+                ⏳ <strong>Update Started</strong><br>
+                Step 1/2: Fetching latest holder data from API...<br>
+                <em>This will take approximately 15 minutes. Please wait...</em>
+            `;
+
+            // Show progress bar
+            progressBar.classList.add('show');
+            progressFill.style.width = '30%';
+
+            try {
+                const response = await fetch('/api/update', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const result = await response.json();
+
+                progressFill.style.width = '100%';
+
+                if (result.success) {
+                    status.className = 'status success show';
+                    status.innerHTML = `
+                        ✅ <strong>Update Complete!</strong><br><br>
+                        📊 <strong>Results:</strong><br>
+                        • Total Holders: ${result.totalHolders?.toLocaleString() || 'N/A'}<br>
+                        • Gainers Found: ${result.gainers || 0}<br>
+                        • Top Gain: ${result.topGain || '0'} tokens<br>
+                        • Duration: ${result.duration || 'N/A'}<br><br>
+                        🎉 Leaderboard updated successfully!
+                    `;
+                } else {
+                    throw new Error(result.error || 'Update failed');
+                }
+            } catch (error) {
+                progressFill.style.width = '100%';
+                status.className = 'status error show';
+                status.innerHTML = `
+                    ❌ <strong>Update Failed</strong><br><br>
+                    <strong>Error:</strong> ${error.message}<br><br>
+                    Please try again or check server logs.
+                `;
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btnText.textContent = 'Update Leaderboard';
+                
+                // Hide progress bar after 2 seconds
+                setTimeout(() => {
+                    progressBar.classList.remove('show');
+                    progressFill.style.width = '0%';
+                }, 2000);
+            }
+        }
+
+        async function resetBaseline() {
+            const confirmed = confirm(
+                '⚠️ WARNING: RESET BASELINE\n\n' +
+                'This will:\n' +
+                '• Set current balances as new baseline\n' +
+                '• Reset ALL scores to 0\n' +
+                '• Clear the leaderboard\n\n' +
+                'Next update will show gains from THIS point.\n\n' +
+                'Are you absolutely sure?'
+            );
+
+            if (!confirmed) return;
+
+            const btn = document.getElementById('resetBtn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span><span>Resetting...</span>';
+            
+            status.className = 'status info show';
+            status.innerHTML = '⏳ Resetting baseline... Please wait.';
+
+            try {
+                const response = await fetch('/api/reset-baseline', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const result = await response.json();
+
+                if (result.success) {
+                    status.className = 'status success show';
+                    status.innerHTML = `
+                        ✅ <strong>Baseline Reset Complete!</strong><br><br>
+                        📊 <strong>Details:</strong><br>
+                        • ${result.totalHolders?.toLocaleString() || 'N/A'} baselines updated<br>
+                        • All scores are now 0<br>
+                        • Leaderboard cleared<br><br>
+                        ℹ️ Next update will show new gains from this point.
+                    `;
+                } else {
+                    throw new Error(result.error || 'Reset failed');
+                }
+            } catch (error) {
+                status.className = 'status error show';
+                status.innerHTML = `
+                    ❌ <strong>Reset Failed</strong><br><br>
+                    <strong>Error:</strong> ${error.message}
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>⚠️</span><span>Reset Baseline (All Scores → 0)</span>';
+            }
+        }
+    </script>
+</body>
+</html>

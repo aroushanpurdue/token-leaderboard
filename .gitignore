@@ -1,0 +1,9 @@
+node_modules/
+.env
+holders_data.json
+holders_data.csv
+baseline_1hr.json
+hourly-gainers.json
+top-holders.json
+*.log
+.DS_Store
