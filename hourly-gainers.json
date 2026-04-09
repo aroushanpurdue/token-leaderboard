@@ -1,0 +1,164 @@
+[
+  {
+    "address": "0x51d5ea8e6f98a73f823938ff5731383aa92b0605",
+    "current": 1.2800883e+25,
+    "baseline": 1.1800883e+25,
+    "gain": 9.999999999999994e+23
+  },
+  {
+    "address": "0x9fb6fa515377c44f3cce9a4a7d236d2dd6aeb939",
+    "current": 8.3794e+22,
+    "baseline": 1.3794e+22,
+    "gain": 7e+22
+  },
+  {
+    "address": "0x32306e08775183a4d06cdb695f25a15445c06149",
+    "current": 8.4102e+22,
+    "baseline": 1.4102e+22,
+    "gain": 6.9999999999999996e+22
+  },
+  {
+    "address": "0xd79b28b13804722a382c96feb2fb2fc347738dc7",
+    "current": 8.3885e+22,
+    "baseline": 2.3885e+22,
+    "gain": 6.000000000000001e+22
+  },
+  {
+    "address": "0xc11cb7eacf56a0db6e121c00f5e50a7a3fda8fff",
+    "current": 8.3826e+22,
+    "baseline": 2.3826e+22,
+    "gain": 6.000000000000001e+22
+  },
+  {
+    "address": "0xa914089887df10d93798dacf2628ee2de5ddbe74",
+    "current": 8.3622e+22,
+    "baseline": 2.3622e+22,
+    "gain": 6.000000000000001e+22
+  },
+  {
+    "address": "0x9a415ce5cc270f60951423faa3464aee8afa4893",
+    "current": 8.3591e+22,
+    "baseline": 2.3591e+22,
+    "gain": 6.000000000000001e+22
+  },
+  {
+    "address": "0xb42c4b4697bcbb2fdb80c9b5fde3394eb1a46c55",
+    "current": 8.3699e+22,
+    "baseline": 2.3699e+22,
+    "gain": 6e+22
+  },
+  {
+    "address": "0x68a1d0cc11bcd68ddcdba7331ff1c289f8dd5d86",
+    "current": 8.3653e+22,
+    "baseline": 2.3653e+22,
+    "gain": 6e+22
+  },
+  {
+    "address": "0x1ebcd606bdf93c022e98bc4ef23bab645adb2cf0",
+    "current": 7.1462e+22,
+    "baseline": 1.1462e+22,
+    "gain": 6e+22
+  },
+  {
+    "address": "0x20240089f0f43a23be88292ce9d87a35e1034038",
+    "current": 7.1452e+22,
+    "baseline": 1.1452e+22,
+    "gain": 6e+22
+  },
+  {
+    "address": "0x14d20776886540d705063b814079209547288268",
+    "current": 8.3994e+22,
+    "baseline": 2.3994e+22,
+    "gain": 5.999999999999999e+22
+  },
+  {
+    "address": "0xbcde6cd70230b844788dec46047aadfeddc0e3bf",
+    "current": 8.3932e+22,
+    "baseline": 3.3932e+22,
+    "gain": 5e+22
+  },
+  {
+    "address": "0x765c6fdad65d6107457437d3963703e7baf09cb3",
+    "current": 8.3743e+22,
+    "baseline": 3.3743e+22,
+    "gain": 5e+22
+  },
+  {
+    "address": "0x01bd39af3fbd8459ae969ab84b747a7a3acba8b8",
+    "current": 6.0876e+22,
+    "baseline": 1.0876e+22,
+    "gain": 5e+22
+  },
+  {
+    "address": "0x5299426f0d07b2bef0208e5dd91b4fe061863098",
+    "current": 7.1444e+22,
+    "baseline": 3.1444e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0x08bba44ca96da34a74e5dba3273580a503e66aa0",
+    "current": 7.1439e+22,
+    "baseline": 3.1439e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0x0a71f3d166c5cb56834f796f23888fa32606bafa",
+    "current": 6.0885e+22,
+    "baseline": 2.0885e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0x97859442704dc5993db0e9af44de0534659f2672",
+    "current": 6.0877e+22,
+    "baseline": 2.0877e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0x0661f9dac69bbe0c3098b85ce1f59d764f892b6f",
+    "current": 5.0116e+22,
+    "baseline": 1.0116e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0x247a13749a283b78a0ce6cb221dcc0b5f9c85dd4",
+    "current": 5.0114e+22,
+    "baseline": 1.0114e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0xf6b11b4b158e8abf199d6a4f01199a2b8828016d",
+    "current": 5.0109e+22,
+    "baseline": 1.0109e+22,
+    "gain": 4e+22
+  },
+  {
+    "address": "0xee61612b5bd342ca9f77cd6f499df5a3b0d0cf66",
+    "current": 5.0123e+22,
+    "baseline": 2.0123e+22,
+    "gain": 3.0000000000000004e+22
+  },
+  {
+    "address": "0x8bfcc6520a26dc34f9e5b42560c0baa04544d97a",
+    "current": 5.0126e+22,
+    "baseline": 2.0126e+22,
+    "gain": 3e+22
+  },
+  {
+    "address": "0x4dde774745aab457609568f451fe65aa2320d5a5",
+    "current": 5.0112e+22,
+    "baseline": 2.0112e+22,
+    "gain": 3e+22
+  },
+  {
+    "address": "0xfb05a342e79e913ad3b7b941a428b2b2bf5501f8",
+    "current": 5.0129e+22,
+    "baseline": 2.0129e+22,
+    "gain": 2.9999999999999996e+22
+  },
+  {
+    "address": "0xb9e1cd45efaa8c94630535d7ef03ec7e5145b0bc",
+    "current": 5.0119e+22,
+    "baseline": 3.0119e+22,
+    "gain": 1.9999999999999996e+22
+  }
+]
